@@ -163,11 +163,11 @@ def __load_point(tokens, string):
 
 def __load_linestring(tokens, string):
     """
-    Has similar inputs and return value to to :func:`__load_point`, except is
+    Has similar inputs and return value to :func:`__load_point`, except is
     for handling LINESTRING geometry.
 
     :returns:
-        A GeoJSON `dict` LineString representation of thw WKT ``string``.
+        A GeoJSON `dict` LineString representation of the WKT ``string``.
     """
     if not tokens.next() == '(':
         raise ValueError(INVALID_WKT_FMT % string)
