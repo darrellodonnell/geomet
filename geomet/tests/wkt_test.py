@@ -142,3 +142,9 @@ class LineStringTestCase(unittest.TestCase):
             wkt.loads(ls)
         self.assertEqual('Invalid WKT: `LINESTRING 0.0 1.0`',
                          ar.exception.message)
+
+
+class PolygonTestCase(unittest.TestCase):
+
+    def test_dumps_polygon_2d(self):
+        pass
