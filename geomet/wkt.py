@@ -194,7 +194,56 @@ def __load_linestring(tokens, string):
 
 
 def __load_polygon(tokens, string):
-    raise NotImplementedError
+    """
+    Has similar inputs and return value to :func:`__load_point`, except is
+    for handling POLYGON geometry.
+
+    :returns:
+        A GeoJson `dict` Polygon representation of the WKT ``string``.
+    """
+    if not (tokens.next(), tokens.next()) == ('(', '('):
+        raise ValueError(INVALID_WKT_FMT % string)
+
+    polygon = []
+    try:
+        ring = []
+        end_of_ring = False
+        vertex = []
+        for t in tokens:
+            if t == '':
+                continue
+            elif t == ')':
+                end_of_ring = True
+
+                if vertex:
+                    ring.append(vertex)
+                    vertex = []
+                if ring:
+                    polygon.append(ring)
+                    ring = []
+            elif t == ',':
+                if end_of_ring:
+                    # don't do anything
+                    end_of_ring = False
+                    continue
+                else:
+                    # it's the end of a vertex
+                    ring.append(vertex)
+                    vertex = []
+            elif t == '(':
+                # beginning of a new ring
+                # nothing to do here
+                continue
+            else:
+                try:
+                    vertex.append(float(t))
+                except:
+                    import pdb; pdb.set_trace()
+
+    except tokenize.TokenError:
+        raise ValueError(INVALID_WKT_FMT % string)
+
+    return dict(type='Polygon', coordinates=polygon)
 
 
 def __load_multipoint(tokens, string):
